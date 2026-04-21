@@ -1,0 +1,145 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  name          String
+  phone         String?
+  role          Role      @default(USER)
+  avatar        String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  orders        Order[]
+  payments      Payment[]
+  activations   ActivationCode[]
+}
+
+model Material {
+  id            Int       @id @default(autoincrement())
+  title         String
+  description   String?
+  category      String
+  level         Level
+  type          Type
+  price         Float     @default(0)
+  originalPrice Float?
+  isFree        Boolean   @default(false)
+  duration      String?
+  lectures      Int?
+  instructor    String?
+  fileUrl       String?
+  imageUrl      String?
+  status        Status    @default(ACTIVE)
+  downloads     Int       @default(0)
+  rating        Float     @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  orderItems    OrderItem[]
+  activationCodes ActivationCode[]
+}
+
+model Order {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
+  total         Float
+  status        OrderStatus @default(PENDING)
+  paymentMethod PaymentMethod
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  items         OrderItem[]
+  payment       Payment?
+}
+
+model OrderItem {
+  id            Int       @id @default(autoincrement())
+  orderId       String
+  order         Order     @relation(fields: [orderId], references: [id])
+  materialId    Int
+  material      Material  @relation(fields: [materialId], references: [id])
+  quantity      Int       @default(1)
+  price         Float
+}
+
+model ActivationCode {
+  id            String    @id @default(cuid())
+  code          String    @unique
+  materialIds   Int[]     // Array of material IDs
+  totalPrice    Float
+  userId        String?
+  user          User?     @relation(fields: [userId], references: [id])
+  status        CodeStatus @default(ACTIVE)
+  usedAt        DateTime?
+  expiresAt     DateTime?
+  createdAt     DateTime  @default(now())
+  
+  materials     Material[] @relation()
+}
+
+model Payment {
+  id            String    @id @default(cuid())
+  orderId       String    @unique
+  order         Order     @relation(fields: [orderId], references: [id])
+  amount        Float
+  method        PaymentMethod
+  status        PaymentStatus @default(PENDING)
+  telegramChatId String?
+  transactionId String?
+  createdAt     DateTime  @default(now())
+  completedAt   DateTime?
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Level {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum Type {
+  COURSE
+  MATERIAL
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+}
+
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  TELEGRAM
+  CARD
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+enum CodeStatus {
+  ACTIVE
+  USED
+  EXPIRED
+}
