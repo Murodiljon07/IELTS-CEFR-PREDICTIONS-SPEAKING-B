@@ -1,16 +1,15 @@
-import http from "http";
-import ora from "ora";
-import cros from "cros";
+const app = require("./src/app");
 
-import app from "./src/app";
+const PORT = process.env.PORT || 5000;
 
-const server = http.createServer(app);
+const server = app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📝 Environment: ${process.env.NODE_ENV}`);
+  console.log(`🔗 API: http://localhost:${PORT}`);
+});
 
-app.use(
-  cros({
-    origin: "http://localhost:5173",
-    Credentials: true,
-  }),
-);
-
-const spinner = ora("server is starting...").start();
+// Handle unhandled promise rejections
+process.on("unhandledRejection", (err) => {
+  console.error("Unhandled Rejection:", err);
+  server.close(() => process.exit(1));
+});
