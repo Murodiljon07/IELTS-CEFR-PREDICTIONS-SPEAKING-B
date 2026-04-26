@@ -1,0 +1,21 @@
+import mongoose from "mongoose";
+
+const matererialSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  type: {
+    type: String,
+    enum: ["beginner", "intermediate", "advanced", "reading"],
+    required: true,
+  },
+  file: {
+    type: String,
+    required: false,
+  },
+  banner: { type: String, required: false },
+  rate: { type: Number, required: false },
+  free: { type: Boolean, required: false },
+  price: { type: Number, required: false },
+  createdAt: { type: Date, default: Date },
+});
+
+export const Material = mongoose.model("Material", matererialSchema);
