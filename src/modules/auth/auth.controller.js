@@ -1,11 +1,14 @@
+import { jwtToken } from "../../config/jwt.js";
 import { loginService, registerService } from "./auth.service.js";
 
 export const loginController = async (req, res) => {
   const { email, password } = req.body;
   try {
-    let result = await loginService(email, password);
+    let user = await loginService(email, password);
 
-    res.json({ msg: "success", user: result });
+    const token = jwtToken(user);
+
+    res.json({ msg: "success", user, token });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -17,7 +20,9 @@ export const registerController = async (req, res) => {
   try {
     let user = await registerService(body);
 
-    res.status(201).json({ msg: "User created", user });
+    const token = jwtToken(user);
+
+    res.status(201).json({ msg: "User created", user, token });
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }

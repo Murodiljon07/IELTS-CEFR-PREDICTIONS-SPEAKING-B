@@ -11,13 +11,13 @@ export const loginService = async (email, password) => {
 };
 
 export const registerService = async (body) => {
-  const { fullName, email, password, age } = body;
+  const { fullName, email, phone, password } = body;
 
   const user = await User.create({
     fullName,
     email,
     password,
-    age,
+    phone,
   });
 
   return user;

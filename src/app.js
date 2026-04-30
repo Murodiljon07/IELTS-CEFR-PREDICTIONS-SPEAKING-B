@@ -1,15 +1,20 @@
 import e from "express";
+import cors from "cors";
 
 const app = e();
+
+/* CORS */
+app.use(cors("*"));
+
+/* middlewares */
+app.use(e.json());
 
 /* routes */
 import authRoutes from "./modules/auth/auth.routes.js";
 import materialRoutes from "./modules/material/material.route.js";
 
-app.use(e.json());
-
 app.get("/", (req, res) => {
-  res.send("welcome to the IELST server...🚀");
+  res.send("welcome to the IELST server...!");
 });
 
 /* use routes */

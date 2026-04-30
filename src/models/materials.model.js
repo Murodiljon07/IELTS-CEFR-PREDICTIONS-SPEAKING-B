@@ -13,8 +13,7 @@ const matererialSchema = new mongoose.Schema({
   },
   banner: { type: String, required: false },
   rate: { type: Number, required: false },
-  free: { type: Boolean, required: false },
-  price: { type: Number, required: false },
+  salary: { type: Number, required: true },
   createdAt: { type: Date, default: Date },
 });
 
