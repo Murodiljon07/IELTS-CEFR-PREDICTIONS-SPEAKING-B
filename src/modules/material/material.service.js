@@ -5,16 +5,16 @@ export const getAllMaterialsService = async () => {
 };
 
 export const createMaterialService = async (data) => {
-  const { name, type, file, banner, rate, free, price } = data;
+  const { name, level, category, file, banner, rate, salary } = data;
 
   const material = await Material.create({
     name,
-    type,
-    price,
-    banner,
+    level,
+    category,
     file,
+    banner,
     rate,
-    free,
+    salary,
     createdAt: Date.now(),
   });
 

@@ -2,9 +2,22 @@ import mongoose from "mongoose";
 
 const matererialSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  type: {
+  level: {
     type: String,
-    enum: ["beginner", "intermediate", "advanced", "reading"],
+    enum: ["beginner", "intermediate", "advanced"],
+    required: true,
+  },
+  category: {
+    type: String,
+    enum: [
+      "IELTS",
+      "grammar",
+      "vocabulary",
+      "reading",
+      "listening",
+      "writing",
+      "speaking",
+    ],
     required: true,
   },
   file: {
