@@ -14,27 +14,12 @@ const router = e.Router();
 
 router.get("/", getAllMaterialsController);
 
-router.post(
-  "/create-material",
-  authMiddleware,
-  adminMiddleware,
-  createMaterialController,
-);
+router.post("/create-material", adminMiddleware, createMaterialController);
 
 router.get("/id", getMaterialByIdController);
 
-router.put(
-  "/update-material",
-  authMiddleware,
-  adminMiddleware,
-  updateMaterialController,
-);
+router.put("/update-material", adminMiddleware, updateMaterialController);
 
-router.delete(
-  "/delete-material",
-  authMiddleware,
-  adminMiddleware,
-  deleteMaterialController,
-);
+router.delete("/delete-material", adminMiddleware, deleteMaterialController);
 
 export default router;
