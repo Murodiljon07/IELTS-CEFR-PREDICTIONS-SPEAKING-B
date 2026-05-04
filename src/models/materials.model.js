@@ -28,6 +28,7 @@ const matererialSchema = new mongoose.Schema({
   rate: { type: Number, required: false },
   salary: { type: Number, required: true },
   createdAt: { type: Date, default: Date },
+  activeCodes: { type: Array, default: [] },
 });
 
 export const Material = mongoose.model("Material", matererialSchema);

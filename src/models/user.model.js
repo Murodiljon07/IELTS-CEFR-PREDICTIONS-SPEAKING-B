@@ -26,6 +26,7 @@ const userSchema = new mongoose.Schema({
   },
 
   card: { type: Array, default: [] },
+  myCodes: { type: Array, default: [] },
 });
 
 export const User = mongoose.model("User", userSchema);
