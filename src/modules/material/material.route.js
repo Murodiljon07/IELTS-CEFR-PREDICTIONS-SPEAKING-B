@@ -9,7 +9,7 @@ import {
 
 import authMiddleware from "../../middleware/auth.middleware.js";
 import adminMiddleware from "../../middleware/admin.middleware.js";
-import { upload } from "../../middleware/middleware/upload.js";
+import { upload } from "../../middleware/upload.js";
 
 const router = e.Router();
 
