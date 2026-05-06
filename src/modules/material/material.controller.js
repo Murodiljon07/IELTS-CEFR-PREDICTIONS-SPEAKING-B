@@ -14,11 +14,8 @@ export const getAllMaterialsController = async (req, res) => {
 
 export const createMaterialController = async (req, res) => {
   try {
-    console.log(req.body);
-    console.log(req.files);
-
-    const file = req.files["file"]?.[0];
-    const banner = req.files["banner"]?.[0];
+    const file = await req.files["file"]?.[0];
+    const banner = await req.files["banner"]?.[0];
 
     const material = await createMaterialService(req.body, {
       file: file ? file.path : "",
@@ -36,31 +33,37 @@ export const createMaterialController = async (req, res) => {
 };
 
 export const getMaterialByIdController = async (req, res) => {
-  const { id } = req.body;
+  const { id } = req.params;
 
   try {
-    let material = getMaterialByIdService(id);
+    let material = await getMaterialByIdService(id);
 
     res.status(200).json({ msg: "material", material });
-  } catch (error) {}
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
 };
 
 export const updateMaterialController = async (req, res) => {
-  const { id } = req.body;
+  const { id } = req.params;
 
   try {
-    let material = updateMaterialService(id);
+    let material = await updateMaterialService(id, req.body);
 
     res.status(200).json({ msg: "material updated", material });
-  } catch (error) {}
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
 };
 
 export const deleteMaterialController = async (req, res) => {
-  const { id } = req.body;
+  const { id } = req.params;
 
   try {
-    let material = deleteMaterialService(id);
+    let material = await deleteMaterialService(id);
 
     res.status(200).json({ msg: "material deleted", material });
-  } catch (error) {}
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
 };
