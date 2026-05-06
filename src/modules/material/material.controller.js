@@ -2,6 +2,8 @@ import {
   getAllMaterialsService,
   createMaterialService,
   getMaterialByIdService,
+  deleteMaterialService,
+  updateMaterialService,
 } from "./material.service.js";
 
 export const getAllMaterialsController = async (req, res) => {
