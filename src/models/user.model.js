@@ -21,8 +21,8 @@ const userSchema = new mongoose.Schema({
     default: "user",
   },
   buyedMaterials: {
-    type: Number,
-    default: 0,
+    type: Array,
+    default: [],
   },
 
   card: { type: Array, default: [] },

@@ -3,8 +3,7 @@ import { loginService, registerService } from "./auth.service.js";
 
 export const loginController = async (req, res) => {
   const SECRET_KEY = process.env.JWT_SECRET;
-  console.log(SECRET_KEY);
-  
+
   const { email, password } = req.body;
 
   try {

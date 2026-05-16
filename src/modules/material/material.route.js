@@ -25,7 +25,7 @@ router.post(
   createMaterialController,
 );
 
-router.get("/:id", getMaterialByIdController);
+router.get("/:id",authMiddleware, getMaterialByIdController);
 
 router.put("/:id", adminMiddleware, updateMaterialController);
 
