@@ -2,8 +2,7 @@ import jwt from "jsonwebtoken";
 import { loginService, registerService } from "./auth.service.js";
 
 export const loginController = async (req, res) => {
-  const SECRET_KEY = process.env.JWT_SECRET;
-
+  const SECRET_KEY = await process.env.JWT_SECRET;
   const { email, password } = req.body;
 
   try {
@@ -20,6 +19,8 @@ export const loginController = async (req, res) => {
 };
 
 export const registerController = async (req, res) => {
+  const SECRET_KEY = await process.env.JWT_SECRET;
+
   const body = req.body;
 
   try {

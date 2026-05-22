@@ -25,10 +25,14 @@ router.post(
   createMaterialController,
 );
 
-router.get("/:id",authMiddleware, getMaterialByIdController);
+router.get("/:id", authMiddleware, getMaterialByIdController);
 
-router.put("/:id", adminMiddleware, updateMaterialController);
+router.put("/update-material/:id", adminMiddleware, updateMaterialController);
 
-router.delete("/:id", adminMiddleware, deleteMaterialController);
+router.delete(
+  "/delete-material/:id",
+  adminMiddleware,
+  deleteMaterialController,
+);
 
 export default router;

@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  phone: { type: Number, required: true },
+  phone: { type: String, required: true },
 
   role: {
     type: String,
@@ -26,7 +26,6 @@ const userSchema = new mongoose.Schema({
   },
 
   card: { type: Array, default: [] },
-  myCodes: { type: Array, default: [] },
 });
 
 export const User = mongoose.model("User", userSchema);

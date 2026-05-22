@@ -18,7 +18,7 @@ export const createMaterialService = async (data) => {
     createdAt: Date.now(),
   });
 
-  return material.save();
+  return await material.save();
 };
 
 export const getMaterialByIdService = async (id) => {
@@ -32,12 +32,12 @@ export const updateMaterialService = async (id, data) => {
   if (!id) {
     throw new Error("Material not found");
   }
-  return Material.findByIdAndUpdate(id, data, { new: true });
+  return await Material.findByIdAndUpdate(id, data, { new: true });
 };
 
 export const deleteMaterialService = async (id) => {
   if (!id) {
     throw new Error("Material not found");
   }
-  return Material.findByIdAndDelete(id);
+  return await Material.findByIdAndDelete(id);
 };
