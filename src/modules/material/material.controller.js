@@ -12,10 +12,11 @@ export const getAllMaterialsController = async (req, res) => {
   res.status(200).json({ msg: "success", materials });
 };
 
+// material.controller.js — bu qism to'g'ri ishlaydi
 export const createMaterialController = async (req, res) => {
   try {
-    const file = await req.files["file"]?.[0];
-    const banner = await req.files["banner"]?.[0];
+    const file = req.files?.["file"]?.[0];
+    const banner = req.files?.["banner"]?.[0];
 
     const material = await createMaterialService(req.body, {
       file: file ? file.path : "",
@@ -25,10 +26,7 @@ export const createMaterialController = async (req, res) => {
     res.status(201).json(material);
   } catch (err) {
     console.log(err);
-
-    res.status(500).json({
-      message: "Server error",
-    });
+    res.status(500).json({ message: "Server error" });
   }
 };
 

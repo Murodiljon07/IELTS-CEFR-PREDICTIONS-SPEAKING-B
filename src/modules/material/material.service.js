@@ -4,40 +4,36 @@ export const getAllMaterialsService = async () => {
   return Material.find();
 };
 
-export const createMaterialService = async (data) => {
-  const { name, level, category, file, banner, rate, salary } = data;
+// material.service.js — ikki argument qabul qiladi
+export const createMaterialService = async (data, files = {}) => {
+  const { name, level, category, rate, price, oldPrice } = data;
 
-  const material = await Material.create({
+  return await Material.create({
     name,
     level,
     category,
-    file,
-    banner,
-    rate,
-    salary,
+    file: files.file || "",
+    banner: files.banner || "",
+    rate: rate ? Number(rate) : undefined,
+    price: Number(price),
+    oldPrice: oldPrice ? Number(oldPrice) : undefined,
     createdAt: Date.now(),
   });
-
-  return await material.save();
 };
 
 export const getMaterialByIdService = async (id) => {
-  if (!id) {
-    throw new Error("Material not found");
-  }
-  return Material.findById(id);
+  if (!id) throw new Error("ID required");
+  const material = await Material.findById(id);
+  if (!material) throw new Error("Material not found");
+  return material;
 };
 
 export const updateMaterialService = async (id, data) => {
-  if (!id) {
-    throw new Error("Material not found");
-  }
+  if (!id) throw new Error("ID required");
   return await Material.findByIdAndUpdate(id, data, { new: true });
 };
 
 export const deleteMaterialService = async (id) => {
-  if (!id) {
-    throw new Error("Material not found");
-  }
+  if (!id) throw new Error("ID required");
   return await Material.findByIdAndDelete(id);
 };

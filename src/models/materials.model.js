@@ -26,9 +26,10 @@ const matererialSchema = new mongoose.Schema({
   },
   banner: { type: String, required: false },
   rate: { type: Number, required: false },
-  salary: { type: Number, required: true },
+  price: { type: Number, required: true },
+  oldPrice: { type: Number, required: false },
+  isPremium: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date },
-  activeCodes: { type: Array, default: [] },
 });
 
 export const Material = mongoose.model("Material", matererialSchema);
