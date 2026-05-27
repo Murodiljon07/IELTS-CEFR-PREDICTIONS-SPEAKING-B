@@ -6,8 +6,6 @@ import {
   getUserOrdersService,
 } from "./order.service.js";
 
-import {} from "../user/user.service.js";
-
 // POST /orders — user checkout qilganda
 export const createOrderController = async (req, res) => {
   try {
@@ -57,7 +55,7 @@ export const getAllOrdersController = async (req, res) => {
 // GET /orders/my — user o'z orderlarini ko'radi
 export const getMyOrdersController = async (req, res) => {
   try {
-    const orders = await getUserOrdersService(req.user._id);
+    const orders = await getUserOrdersService(req.params.id);
     res.json({ orders });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });

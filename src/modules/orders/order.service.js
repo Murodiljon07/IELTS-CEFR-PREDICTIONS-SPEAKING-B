@@ -10,13 +10,6 @@ export const createOrderService = async (userId, materialIds, totalPrice) => {
     status: "pending",
   });
 
-  // Populatsiya qilib TG ga yuborish uchun to'liq ma'lumot olish
-  const populated = await Order.findById(order._id)
-    .populate("user", "fullName email phone")
-    .populate("materials", "name price category");
-
-  // await sendOrderToTelegram(populated);
-
   // User modeliga ham order qo'shish
   await User.findByIdAndUpdate(userId, {
     $push: { orders: order._id },
@@ -50,5 +43,5 @@ export const getAllOrdersService = async () => {
 };
 
 export const getUserOrdersService = async (userId) => {
-  return Order.find({ user: userId }).populate("materials");
+  return Order.find({ user: userId });
 };
