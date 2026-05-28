@@ -4,7 +4,8 @@ import { userPortfolio, userCart } from "./user.controller.js";
 
 const router = e.Router();
 
+// ✅ Protected routes (require authentication)
 router.get("/portfolio", authMiddleware, userPortfolio);
-router.put("/user-order/:id", authMiddleware, userCart);
+router.put("/cart/:id", authMiddleware, userCart);
 
 export default router;

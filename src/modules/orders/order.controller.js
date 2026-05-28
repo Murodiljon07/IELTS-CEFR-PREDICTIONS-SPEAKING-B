@@ -4,60 +4,146 @@ import {
   cancelOrderService,
   getAllOrdersService,
   getUserOrdersService,
+  getOrderByIdService,
 } from "./order.service.js";
 
-// POST /orders — user checkout qilganda
 export const createOrderController = async (req, res) => {
   try {
-    const { materialIds, totalPrice, userId } = req.body;
+    // ✅ Get userId from authMiddleware
+    const userId = req.user._id;
+    const { materialIds, totalPrice } = req.body;
 
     if (!materialIds?.length) {
-      return res.status(400).json({ message: "Cart bo'sh" });
+      return res.status(400).json({
+        success: false,
+        message: "Cart is empty",
+      });
+    }
+
+    if (!totalPrice || totalPrice <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid total price",
+      });
     }
 
     const order = await createOrderService(userId, materialIds, totalPrice);
-    res.status(201).json({ msg: "Order yaratildi, to'lov kutilmoqda", order });
+
+    res.status(201).json({
+      success: true,
+      message: "Order created successfully, waiting for payment confirmation",
+      data: order,
+    });
   } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
 
-// PATCH /orders/:id/approve — admin tasdiqlaydi
 export const approveOrderController = async (req, res) => {
   try {
-    const order = await approveOrderService(req.params.id);
-    res.json({ msg: "Order tasdiqlandi", order });
+    const { id } = req.params;
+    const order = await approveOrderService(id);
+
+    res.json({
+      success: true,
+      message: "Order approved and materials access granted",
+      data: order,
+    });
   } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
 
-// PATCH /orders/:id/cancel — admin bekor qiladi
 export const cancelOrderController = async (req, res) => {
   try {
-    const order = await cancelOrderService(req.params.id);
-    res.json({ msg: "Order bekor qilindi", order });
+    const { id } = req.params;
+    const order = await cancelOrderService(id);
+
+    res.json({
+      success: true,
+      message: "Order cancelled successfully",
+      data: order,
+    });
   } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
 
-// GET /orders — admin barcha orderlarni ko'radi
 export const getAllOrdersController = async (req, res) => {
   try {
     const orders = await getAllOrdersService();
-    res.json({ orders });
+    res.json({
+      success: true,
+      count: orders.length,
+      data: orders,
+    });
   } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
 
-// GET /orders/my — user o'z orderlarini ko'radi
 export const getMyOrdersController = async (req, res) => {
   try {
-    const orders = await getUserOrdersService(req.params.id);
-    res.json({ orders });
+    // ✅ Get userId from authMiddleware
+    const userId = req.user._id;
+    const orders = await getUserOrdersService(userId);
+
+    res.json({
+      success: true,
+      count: orders.length,
+      data: orders,
+    });
   } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+export const getOrderByIdController = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const order = await getOrderByIdService(id);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    // ✅ Check if user owns this order or is admin
+    if (
+      order.user._id.toString() !== req.user._id.toString() &&
+      req.user.role !== "admin"
+    ) {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied",
+      });
+    }
+
+    res.json({
+      success: true,
+      data: order,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
