@@ -8,6 +8,7 @@ const connectDB = async () => {
 
   try {
     await mongoose.connect(mongoDB_URL);
+
     spinner.succeed("MongoDB connected successfully ");
   } catch (error) {
     spinner.fail("DB connection failed");
