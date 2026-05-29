@@ -1,7 +1,5 @@
 // middleware/upload.js
 import multer from "multer";
-import path from "path";
-import fs from "fs";
 
 const uploadDir = "uploads/";
 if (!fs.existsSync(uploadDir)) {
@@ -13,7 +11,7 @@ const sanitizeFileName = (filename) => {
   return filename.replace(/[^a-zA-Z0-9.-]/g, "_").replace(/\s+/g, "_");
 };
 
-const storage = multer.diskStorage({
+const storage = multer.memoryStorage({
   destination: (req, file, cb) => {
     cb(null, uploadDir);
   },
@@ -32,8 +30,8 @@ const fileFilter = (req, file, cb) => {
   cb(null, true);
 };
 
-// ✅ 20MB limit
-const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
+// ✅ 5MB limit
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 export const upload = multer({
   storage,
@@ -50,7 +48,7 @@ export const handleMulterError = (err, req, res, next) => {
     if (err.code === "FILE_TOO_LARGE") {
       return res.status(400).json({
         success: false,
-        message: `Fayl hajmi 20MB dan katta`,
+        message: `Fayl hajmi 5MB dan katta`,
       });
     }
     if (err.code === "LIMIT_FILE_COUNT") {

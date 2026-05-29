@@ -35,11 +35,16 @@ export const getAllMaterialsController = async (req, res) => {
 export const createMaterialController = async (req, res) => {
   try {
     const file = req.files?.["file"]?.[0];
-    const banner = req.files?.["banner"]?.[0];
 
     const files = {
-      file: file ? file.path : "",
-      banner: banner ? banner.path : "",
+      file: file
+        ? {
+            data: file.buffer,
+            contentType: file.mimetype,
+            fileName: file.originalname,
+            size: file.size,
+          }
+        : null,
     };
 
     console.log("Creating material with files:", files);
@@ -64,83 +69,25 @@ export const createMaterialController = async (req, res) => {
 export const getMaterialContentController = async (req, res) => {
   try {
     const { id } = req.params;
+
     const material = await getMaterialByIdService(id);
 
-    if (!material) {
+    if (!material || !material.file) {
       return res.status(404).json({
         success: false,
-        message: "Material not found",
+        message: "File not found",
       });
     }
 
-    // Fayl mavjudligini tekshirish
-    if (!material.file || material.file === "") {
-      return res.status(404).json({
-        success: false,
-        message: "No file associated with this material",
-      });
-    }
+    res.setHeader("Content-Type", material.file.contentType);
 
-    // Fayl yo'lini tekshirish
-    const filePath = path.resolve(material.file);
-
-    if (!fs.existsSync(filePath)) {
-      console.error("File not found:", filePath);
-      return res.status(404).json({
-        success: false,
-        message: "File does not exist on server",
-      });
-    }
-
-    // Fayl turini aniqlash
-    const ext = path.extname(filePath).toLowerCase();
-    const mimeTypes = {
-      ".pdf": "application/pdf",
-      ".jpg": "image/jpeg",
-      ".jpeg": "image/jpeg",
-      ".png": "image/png",
-      ".gif": "image/gif",
-      ".webp": "image/webp",
-      ".mp4": "video/mp4",
-      ".mp3": "audio/mpeg",
-      ".doc": "application/msword",
-      ".docx":
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      ".xls": "application/vnd.ms-excel",
-      ".xlsx":
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      ".ppt": "application/vnd.ms-powerpoint",
-      ".pptx":
-        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-      ".txt": "text/plain",
-      ".epub": "application/epub+zip",
-      ".mp4": "video/mp4",
-      ".mov": "video/quicktime",
-      ".avi": "video/x-msvideo",
-      ".mkv": "video/x-matroska",
-    };
-
-    const contentType = mimeTypes[ext] || "application/octet-stream";
-
-    // ✅ INLINE - brauzerda ochish uchun (yuklab olinmaydi)
-    res.setHeader("Content-Type", contentType);
     res.setHeader(
       "Content-Disposition",
-      `inline; filename="${encodeURIComponent(material.name)}${ext}"`,
+      `inline; filename="${material.file.fileName}"`,
     );
 
-    // Faylni stream qilib yuborish
-    const fileStream = fs.createReadStream(filePath);
-    fileStream.pipe(res);
-
-    fileStream.on("error", (err) => {
-      console.error("Stream error:", err);
-      if (!res.headersSent) {
-        res.status(500).json({ success: false, message: "File read error" });
-      }
-    });
+    res.send(material.file.data);
   } catch (error) {
-    console.error("Get material content error:", error);
     res.status(500).json({
       success: false,
       message: error.message,

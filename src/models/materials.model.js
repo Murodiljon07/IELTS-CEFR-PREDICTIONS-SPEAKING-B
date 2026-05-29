@@ -26,8 +26,10 @@ const materialSchema = new mongoose.Schema(
       required: true,
     },
     file: {
-      type: String,
-      required: true,
+      data: Buffer,
+      contentType: String,
+      fileName: String,
+      size: Number,
     },
 
     rate: {

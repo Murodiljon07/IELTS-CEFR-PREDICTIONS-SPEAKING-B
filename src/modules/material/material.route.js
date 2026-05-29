@@ -31,10 +31,7 @@ router.get(
 router.post(
   "/",
   adminMiddleware,
-  upload.fields([
-    { name: "file", maxCount: 1 },
-    { name: "banner", maxCount: 1 },
-  ]),
+  upload.fields([{ name: "file", maxCount: 1 }]),
   handleMulterError,
   createMaterialController,
 );
@@ -42,10 +39,7 @@ router.post(
 router.put(
   "/:id",
   adminMiddleware,
-  upload.fields([
-    { name: "file", maxCount: 1 },
-    { name: "banner", maxCount: 1 },
-  ]),
+  upload.fields([{ name: "file", maxCount: 1 }]),
   handleMulterError,
   updateMaterialController,
 );

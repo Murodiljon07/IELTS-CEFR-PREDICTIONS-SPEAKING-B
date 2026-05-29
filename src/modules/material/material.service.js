@@ -40,7 +40,9 @@ export const getAllMaterialsService = async (filters = {}) => {
     query.$text = { $search: search };
   }
 
-  const materials = await Material.find(query).sort({ createdAt: -1 });
+  const materials = await Material.find(query)
+    .sort({ createdAt: -1 })
+    .select("-file.data");
 
   return addFullUrlToArray(materials);
 };
@@ -61,8 +63,7 @@ export const createMaterialService = async (data, files = {}) => {
     name: name.trim(),
     level,
     category,
-    file: files.file || "",
-    banner: files.banner || "",
+    file: files.file || null,
     rate: rate ? Number(rate) : 0,
     price: finalPrice,
     oldPrice: oldPrice ? Number(oldPrice) : undefined,
@@ -128,14 +129,6 @@ export const deleteMaterialService = async (id) => {
 
   const material = await Material.findById(id);
   if (!material) throw new Error("Material not found");
-
-  // Delete associated files
-  if (material.file && fs.existsSync(material.file)) {
-    fs.unlinkSync(material.file);
-  }
-  if (material.banner && fs.existsSync(material.banner)) {
-    fs.unlinkSync(material.banner);
-  }
 
   return await Material.findByIdAndDelete(id);
 };
