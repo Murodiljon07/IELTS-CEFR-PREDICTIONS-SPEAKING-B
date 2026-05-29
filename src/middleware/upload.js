@@ -1,11 +1,6 @@
 // middleware/upload.js
 import multer from "multer";
 
-const uploadDir = "uploads/";
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
 // ✅ Fayl nomini tozalash funksiyasi
 const sanitizeFileName = (filename) => {
   return filename.replace(/[^a-zA-Z0-9.-]/g, "_").replace(/\s+/g, "_");
