@@ -17,19 +17,21 @@ const router = e.Router();
 
 // Public routes (hamma ko'rishi mumkin)
 router.get("/", getAllMaterialsController);
-router.get("/:id", authMiddleware, getMaterialByIdController); // ✅ Access status bilan
 
 // ✅ Protected content route - faqat access bo'lsa ochiladi
 router.get(
   "/:id/content",
   authMiddleware,
   checkAccess,
-  getMaterialContentController, // ✅ Yuklab olmasdan ochish
+  getMaterialContentController,
 );
+
+router.get("/:id", authMiddleware, getMaterialByIdController);
 
 // Admin only routes
 router.post(
   "/",
+  authMiddleware,
   adminMiddleware,
   upload.fields([{ name: "file", maxCount: 1 }]),
   handleMulterError,
@@ -38,12 +40,18 @@ router.post(
 
 router.put(
   "/:id",
+  authMiddleware,
   adminMiddleware,
   upload.fields([{ name: "file", maxCount: 1 }]),
   handleMulterError,
   updateMaterialController,
 );
 
-router.delete("/:id", adminMiddleware, deleteMaterialController);
+router.delete(
+  "/:id",
+  authMiddleware,
+  adminMiddleware,
+  deleteMaterialController,
+);
 
 export default router;

@@ -47,8 +47,6 @@ export const createMaterialController = async (req, res) => {
         : null,
     };
 
-    console.log("Creating material with files:", files);
-
     const material = await createMaterialService(req.body, files);
 
     res.status(201).json({
@@ -68,29 +66,30 @@ export const createMaterialController = async (req, res) => {
 // ✅ Material faylini ochish (yuklab olmasdan)
 export const getMaterialContentController = async (req, res) => {
   try {
-    const { id } = req.params;
+    const material = await getMaterialByIdService(req.params.id);
 
-    const material = await getMaterialByIdService(id);
-
-    if (!material || !material.file) {
+    if (!material?.file?.data) {
       return res.status(404).json({
         success: false,
         message: "File not found",
       });
     }
 
-    res.setHeader("Content-Type", material.file.contentType);
+    res.setHeader(
+      "Content-Type",
+      material.file.contentType || "application/octet-stream",
+    );
 
     res.setHeader(
       "Content-Disposition",
       `inline; filename="${material.file.fileName}"`,
     );
 
-    res.send(material.file.data);
-  } catch (error) {
-    res.status(500).json({
+    return res.send(material.file.data);
+  } catch (err) {
+    return res.status(500).json({
       success: false,
-      message: error.message,
+      message: err.message,
     });
   }
 };
@@ -156,11 +155,16 @@ export const updateMaterialController = async (req, res) => {
     const { id } = req.params;
 
     const file = req.files?.["file"]?.[0];
-    const banner = req.files?.["banner"]?.[0];
 
     const files = {
-      file: file ? file.path : null,
-      banner: banner ? banner.path : null,
+      file: file
+        ? {
+            data: file.buffer,
+            contentType: file.mimetype,
+            fileName: file.originalname,
+            size: file.size,
+          }
+        : null,
     };
 
     const material = await updateMaterialService(id, req.body, files);

@@ -24,6 +24,7 @@ import authRoutes from "./modules/auth/auth.routes.js";
 import materialRoutes from "./modules/material/material.route.js";
 import userRoutes from "./modules/user/user.routes.js";
 import orderRoutes from "./modules/orders/orders.route.js";
+import dashboardRoutes from "./modules/dashboard/dashboard.route.js";
 
 app.get("/", (req, res) => {
   res.send("Welcome to the IELTS server...!");
@@ -34,6 +35,7 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/materials", materialRoutes);
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/orders", orderRoutes);
+app.use("/api/v1/admin/dashboard", dashboardRoutes);
 
 /* Error handling middleware */
 app.use((err, req, res, next) => {

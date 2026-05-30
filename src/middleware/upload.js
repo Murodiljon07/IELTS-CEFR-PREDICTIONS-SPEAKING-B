@@ -25,16 +25,11 @@ const fileFilter = (req, file, cb) => {
   cb(null, true);
 };
 
-// ✅ 5MB limit
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-
 export const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   limits: {
-    fileSize: MAX_FILE_SIZE,
-    files: 10,
+    fileSize: 5 * 1024 * 1024, // 5MB
   },
-  fileFilter,
 });
 
 // ✅ Error handling middleware for multer
@@ -97,7 +92,6 @@ export const getFileSize = (filePath) => {
   return 0;
 };
 
-// ✅ Qo'shimcha: Fayl turini aniqlash (.html qo'shilgan)
 export const getFileType = (filePath) => {
   const ext = path.extname(filePath).toLowerCase();
   const mimeTypes = {
