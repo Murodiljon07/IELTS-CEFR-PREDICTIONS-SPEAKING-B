@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/Murodiljon07/IELTS-CEFR-PREDICTIONS-SPEAKING-B#readme",
   "dependencies": {
+    "@vercel/speed-insights": "^2.0.0",
     "cors": "^2.8.6",
     "cross": "^1.0.0",
     "dotenv": "^17.4.2",
