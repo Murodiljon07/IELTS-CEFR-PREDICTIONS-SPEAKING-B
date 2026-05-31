@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = e();
-app.use(cros());
+app.use(cors());
 
 /* Middlewares */
 app.use(e.json());
