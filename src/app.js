@@ -7,12 +7,7 @@ dotenv.config();
 const app = e();
 
 /* CORS */
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL || "*",
-    credentials: true,
-  }),
-);
+app.use(cors());
 
 /* Middlewares */
 app.use(e.json());
