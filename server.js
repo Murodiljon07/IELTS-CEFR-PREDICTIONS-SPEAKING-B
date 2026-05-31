@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
-dotenv.config();
-import http from "http";
+// dotenv.config();
+// import http from "http";
 import cros from "cors";
 
 import connectDB from "./src/config/db.js";
@@ -10,13 +10,15 @@ import app from "./src/app.js";
 
 app.use(cros());
 
-const server = http.createServer(app);
-const PORT = process.env.PORT;
-console.log("DATABASE_URL:", process.env.DATABASE_URL);
+export default app;
 
-server.listen(PORT, () => {
-  console.log(
-    "Server is running on PORT: " + PORT,
-    `\nlink: http://localhost:${PORT}`,
-  );
-});
+// const server = http.createServer(app);
+// const PORT = process.env.PORT;
+// console.log("DATABASE_URL:", process.env.DATABASE_URL);
+
+// server.listen(PORT, () => {
+//   console.log(
+//     "Server is running on PORT: " + PORT,
+//     `\nlink: http://localhost:${PORT}`,
+//   );
+// });
